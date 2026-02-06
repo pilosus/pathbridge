@@ -51,6 +51,7 @@ jobs:
     if: github.event_name == 'push' && contains(github.ref, 'refs/tags/')
     environment: pypi
     permissions:
+      contents: read
       id-token: write
     steps:
       - uses: actions/checkout@v6
