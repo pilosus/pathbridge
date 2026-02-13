@@ -1,6 +1,7 @@
-.PHONY: uv deps test test-cov lint format typecheck check clean build publish-test publish
+.PHONY: uv deps test test-cov test-matrix-setup test-matrix lint format typecheck check clean build publish-test publish
 
 UV_EXTRA_ARGS ?=
+PY_MATRIX ?= 3.10 3.11 3.12 3.13 3.14
 
 uv:
 	@which uv >/dev/null 2>&1 || { \
@@ -16,6 +17,17 @@ test:
 
 test-cov:
 	@uv run $(UV_EXTRA_ARGS) pytest --cov=pathbridge --cov-report=term-missing --cov-report=html --rootdir tests .
+
+test-matrix-setup: uv
+	@uv python install $(PY_MATRIX)
+
+test-matrix: uv
+	@set -e; \
+	for py in $(PY_MATRIX); do \
+		echo "==> Running tests on Python $$py"; \
+		uv sync --python $$py --all-extras; \
+		uv run --python $$py $(UV_EXTRA_ARGS) pytest -vvv --rootdir tests .; \
+	done
 
 ruff-check:
 	@uv run $(UV_EXTRA_ARGS) ruff check --fix src tests
