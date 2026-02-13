@@ -13,7 +13,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Fixed
 
-- Fixed bug in the compiler that caused incorrect translation of explicit numeric indices in rules
+- Fixed bug in the compiler that caused incorrect translation of explicit numeric indices in rules,
+  see [#2](https://github.com/pilosus/pathbridge/issues/2)
 
 ## [v0.1.0] - 2026-02-06
 
