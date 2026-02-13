@@ -9,6 +9,23 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ...
 
+## [v0.2.0] - 2026-02-13
+
+### Added
+
+- A new `pathbridge.extras` toolkit to make rule generation easier.
+- `make_shape(...)` to build a realistic sample facade object.
+- `trace_converter(...)` to run a converter function with tracing enabled.
+- `build_rules(...)` to generate Destination-to-Facade rules in one call.
+
+### Changed
+
+- README now includes an Extras section with a complete example showing how to:
+  - build a sample shape,
+  - generate rules from a converter,
+  - map both scalar and list-item validation errors.
+- Improved `build_rules(...)` docstring to better explain how to use it.
+
 ## [v0.1.1] - 2026-02-13
 
 ### Fixed
@@ -30,7 +47,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - Initial project structure
 
-[Unreleased]: https://github.com/pilosus/kairos/compare/v0.1.1...HEAD
+[Unreleased]: https://github.com/pilosus/kairos/compare/v0.2.0...HEAD
+[v0.2.0]: https://github.com/pilosus/pathbridge/compare/v0.1.0...v0.2.0
 [v0.1.1]: https://github.com/pilosus/pathbridge/compare/v0.1.0...v0.1.1
 [v0.1.0]: https://github.com/pilosus/pathbridge/compare/v0.0.0...v0.1.0
 [v0.0.0]: https://github.com/pilosus/pathbridge/commit/c41ed4282f22ce3cf7c2e0cf2c7a4027efe6ae5b

@@ -43,3 +43,88 @@ print(translate_location(loc, compiled))
 errors = to_marshmallow([(loc, "Invalid phone")], compiled)
 # {'person': {'phones': {1: ['Invalid phone']}}}
 ```
+
+## Extras
+
+`pathbridge.extras` provides helper utilities for generating rules from your
+converter:
+
+- `make_shape(...)`: build a truthy sample facade object.
+- `build_rules(...)`: trace a sample conversion and produce `Destination -> Facade`
+  mapping rules.
+
+### Extras example
+
+```python
+import dataclasses
+import types
+
+from pathbridge import compile_rules, to_marshmallow
+from pathbridge.extras import build_rules, make_shape
+
+
+@dataclasses.dataclass
+class FacadeName:
+    first: str
+    last: str
+
+
+@dataclasses.dataclass
+class Facade:
+    name: FacadeName
+    phones: list[str]
+
+
+@dataclasses.dataclass
+class NameXml:
+    first_name: str = dataclasses.field(metadata={"name": "FirstName"})
+    surname: str = dataclasses.field(metadata={"name": "Surname"})
+
+
+@dataclasses.dataclass
+class ReturnXml:
+    name: NameXml = dataclasses.field(metadata={"name": "YourName"})
+    phones: list[str] = dataclasses.field(metadata={"name": "Phone"})
+
+    class Meta:
+        name = "Return"
+
+
+def convert(src: Facade) -> ReturnXml:
+    return ReturnXml(
+        name=NameXml(first_name=src.name.first, surname=src.name.last),
+        phones=src.phones,
+    )
+
+
+shape = make_shape(Facade, list_len=2)
+rules = build_rules(
+    model_module=types.SimpleNamespace(ReturnXml=ReturnXml, NameXml=NameXml),
+    converter=convert,
+    shape=shape,
+    root_tag="facade",
+)
+
+compiled = compile_rules(rules)
+errors = to_marshmallow(
+    [
+        ("/Return[1]/NameXml[1]/FirstName[1]", "Required field"),
+        ("/Return[1]/Phone[2]/Phone[1]", "Invalid phone"),
+    ],
+    compiled,
+)
+
+print(rules)
+# {
+#   'Return[1]/NameXml[1]/FirstName[1]': 'facade/name/first',
+#   'Return[1]/Phone[2]/Phone[1]': 'facade/phones[1]',
+#   ...
+# }
+print(errors)
+# {
+#   'facade': {
+#     'name': {'first': ['Required field']},
+#     'phones': {1: ['Invalid phone']},
+#   }
+# }
+```
