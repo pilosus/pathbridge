@@ -229,11 +229,8 @@ def _dest_segments_with_captures(
             name_to_caps.setdefault(norm, []).append(int(cap_name[1:]))
             regex_parts.append(rf"/{_NS_OPT}{re.escape(name)}\[(?P<{cap_name}>\d+)\]")
         elif idx_val is not None and idx_val.isdigit():
-            # Explicit numeric index: capture it
-            cap_name = f"i{cap_counter}"
-            cap_counter += 1
-            name_to_caps.setdefault(norm, []).append(int(cap_name[1:]))
-            regex_parts.append(rf"/{_NS_OPT}{re.escape(name)}\[(?P<{cap_name}>\d+)\]")
+            # Explicit numeric index must match exactly as written.
+            regex_parts.append(rf"/{_NS_OPT}{re.escape(name)}\[{re.escape(idx_val)}\]")
         elif idx_val is not None and idx_val.startswith("@"):
             # XPath predicate like [@Type='UTR']: match it literally (escaped)
             regex_parts.append(rf"/{_NS_OPT}{re.escape(name)}\[{re.escape(idx_val)}\]")
