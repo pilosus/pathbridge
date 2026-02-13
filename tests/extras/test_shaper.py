@@ -108,12 +108,13 @@ def test_make_shape_with_factory_calls_factory() -> None:
     assert shaped.children[0].label == "factory-child"
 
 
-def test_make_shape_falls_back_for_pep604_optional_dataclass_fields() -> None:
+def test_make_shape_populates_pep604_optional_dataclass_fields() -> None:
     shaped = make_shape(_WithOptionalChild)
 
     assert isinstance(shaped, _WithOptionalChild)
     assert shaped.value == "x"
-    assert shaped.child == "x"
+    assert shaped.child is not None
+    assert isinstance(shaped.child, _Child)
 
 
 def test_make_shape_rejects_unsupported_spec() -> None:

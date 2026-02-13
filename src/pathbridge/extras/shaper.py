@@ -3,6 +3,7 @@ from __future__ import annotations
 import dataclasses
 import datetime as dt
 import inspect
+import types
 import typing as t
 from decimal import Decimal
 from enum import Enum
@@ -22,7 +23,7 @@ def _dataclass_fields(cls: type[t.Any]) -> tuple[dataclasses.Field[t.Any], ...]:
 def _is_optional(tp: t.Any) -> tuple[bool, t.Any]:
     """Return (is_optional, inner_type)."""
     origin = t.get_origin(tp)
-    if origin is t.Union:  # Optional[T] is Union[T, NoneType]
+    if origin in (t.Union, types.UnionType):  # Optional[T] is Union[T, NoneType]
         args = [a for a in t.get_args(tp) if a is not type(None)]
         if len(args) == 1:
             return True, args[0]
