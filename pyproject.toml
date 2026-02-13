@@ -42,6 +42,9 @@ Homepage = "https://github.com/pilosus/pathbridge"
 Repository = "https://github.com/pilosus/pathbridge"
 Issues = "https://github.com/pilosus/pathbridge/issues"
 
+[project.scripts]
+pathbridge = "pathbridge.cli:main"
+
 [tool.hatch.build.targets.sdist]
 include = [
     "/src",
