@@ -1,7 +1,7 @@
 from __future__ import annotations
 
 import re
-from collections.abc import Iterable, Mapping, MutableMapping, Sequence
+from collections.abc import Iterable, Sequence
 from typing import (
     Protocol,
     TypeAlias,
@@ -26,7 +26,7 @@ FacadePathTemplateT = (
 #
 
 # Raw rules
-RawRulesMapT = Mapping[DestinationPathT, FacadePathT]
+RawRulesMapT = dict[DestinationPathT, FacadePathT]
 
 # Compiled rule used at runtime
 CompiledRuleT = tuple[re.Pattern[str], FacadePathTemplateT]
@@ -61,7 +61,7 @@ ErrorInputT = (
 
 # A recursive mapping of str/int -> (subtree | list[str] messages)
 # This keeps type-checkers happy when building nested error dicts
-MarshmallowValidationErrorT: TypeAlias = MutableMapping[
+MarshmallowValidationErrorT: TypeAlias = dict[
     str | int,
     Union["MarshmallowValidationErrorT", list[str]],
 ]
