@@ -21,6 +21,7 @@ Your users need errors on **your model** (Pydantic/Marshmallow/dataclasses). Pat
 pip install pathbridge
 ```
 
+
 ## Quick start
 
 ```python
@@ -147,3 +148,51 @@ shape = make_shape(
     },
 )
 ```
+
+## CLI
+
+PathBridge provides a `pathbridge` CLI with a `compile` command that runs:
+
+1. `make_shape(...)`
+2. `build_rules(...)`
+3. `compile_rules(...)` (when `--emit` includes compiled output)
+4. Python module generation
+
+
+### CLI example
+
+Run from the repository root:
+
+```bash
+pathbridge compile \
+  --output-dir . \
+  --output-package mtr.translation_rules \
+  --output-module compiled \
+  --facade-class ./tests/integration/uk_main_tax_return/facade/mtr_facade.py:MTR \
+  --destination-module ./tests/integration/uk_main_tax_return/destination/mtr_v1_1.py \
+  --facade-to-destination ./tests/integration/uk_main_tax_return/converter/mtr_converter.py:to_mtr_v1_1 \
+  --shape-list-len 10 \
+  --facade-root-tag mtr \
+  --lift-functions _yes \
+  --lift-functions _yes_no \
+  --lift-functions _tax_payer_status \
+  --lift-functions _student_loan_plan \
+  --lift-functions _postgraduate_loan_plan \
+  --lift-functions _attachment_file_format \
+  --lift-functions decimal_str_or_none \
+  --lift-functions xml_date_or_none \
+  --lift-functions decode_attachment
+```
+
+## Real-world reference
+
+For a real-life example of PathBridge usage, see:
+
+- `tests/integration/uk_main_tax_return`
+
+This integration setup includes:
+
+- facade models (`facade/mtr_facade.py`)
+- destination models generated from XSD (`destination/mtr_v1_1.py`)
+- facade-to-destination converter (`converter/mtr_converter.py`)
+- tracer-based rules generation and translation assertions (`test_mtr.py`)
