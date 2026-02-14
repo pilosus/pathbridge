@@ -26,6 +26,69 @@ DEFAULT_TYPE_DEFAULTS: TypeDefaultMapping = {
     UUID: UUID(int=0),
 }
 
+#
+# Public API
+#
+
+
+def make_shape(
+    spec: type[T] | T | t.Callable[[], T],
+    *,
+    list_len: int = 1,
+    overrides: dict[str, t.Any] | None = None,
+    type_defaults: TypeDefaultMapping | None = None,
+) -> T:
+    """
+    Construct a 'truthy' instance for the given facade class/instance/factory.
+
+    - spec: dataclass class, an instance (will be cloned shallowly), or a zero-arg factory
+    - list_len: default length for list fields
+    - overrides: dotted-path -> value to force (supports [index])
+    - type_defaults: optional mapping `{type: default_or_factory}` to override
+      built-in scalar defaults.
+
+    Heuristics:
+      - dataclasses: recursively instantiate with non-empty defaults
+      - Optional[T]: pick T with a non-empty value
+      - enums: pick first member
+      - str: ""; int: 0; Decimal: 0; bool: True; date: 1970-01-01
+      - lists: [truthy(T) for _ in range(list_len)]
+    """
+    resolved_type_defaults: TypeDefaultMapping = dict(DEFAULT_TYPE_DEFAULTS)
+    if type_defaults:
+        resolved_type_defaults.update(type_defaults)
+
+    if inspect.isclass(spec):
+        if dataclasses.is_dataclass(spec):
+            base = _shape_dataclass(
+                t.cast(type[T], spec),
+                list_len=list_len,
+                overrides=overrides,
+                seen=set(),
+                type_defaults=resolved_type_defaults,
+            )
+        else:
+            raise TypeError(
+                "make_shape expects a dataclass class/instance or a zero-arg factory"
+            )
+    elif dataclasses.is_dataclass(spec):
+        # already an instance: (re)apply overrides and return
+        base = t.cast(T, spec)
+        if overrides:
+            _apply_overrides(base, overrides)
+    elif callable(spec):
+        base = spec()
+    else:
+        raise TypeError(
+            "make_shape expects a dataclass class/instance or a zero-arg factory"
+        )
+    return base
+
+
+#
+# Helpers
+#
+
 
 def _is_dataclass_type(tp: t.Any) -> t.TypeGuard[type[t.Any]]:
     return inspect.isclass(tp) and dataclasses.is_dataclass(tp)
@@ -300,57 +363,3 @@ def _shape_dataclass(
         return inst
     finally:
         seen.remove(cls)
-
-
-def make_shape(
-    spec: type[T] | T | t.Callable[[], T],
-    *,
-    list_len: int = 1,
-    overrides: dict[str, t.Any] | None = None,
-    type_defaults: TypeDefaultMapping | None = None,
-) -> T:
-    """
-    Construct a 'truthy' instance for the given facade class/instance/factory.
-
-    - spec: dataclass class, an instance (will be cloned shallowly), or a zero-arg factory
-    - list_len: default length for list fields
-    - overrides: dotted-path -> value to force (supports [index])
-    - type_defaults: optional mapping `{type: default_or_factory}` to override
-      built-in scalar defaults.
-
-    Heuristics:
-      - dataclasses: recursively instantiate with non-empty defaults
-      - Optional[T]: pick T with a non-empty value
-      - enums: pick first member
-      - str: ""; int: 0; Decimal: 0; bool: True; date: 1970-01-01
-      - lists: [truthy(T) for _ in range(list_len)]
-    """
-    resolved_type_defaults: TypeDefaultMapping = dict(DEFAULT_TYPE_DEFAULTS)
-    if type_defaults:
-        resolved_type_defaults.update(type_defaults)
-
-    if inspect.isclass(spec):
-        if dataclasses.is_dataclass(spec):
-            base = _shape_dataclass(
-                t.cast(type[T], spec),
-                list_len=list_len,
-                overrides=overrides,
-                seen=set(),
-                type_defaults=resolved_type_defaults,
-            )
-        else:
-            raise TypeError(
-                "make_shape expects a dataclass class/instance or a zero-arg factory"
-            )
-    elif dataclasses.is_dataclass(spec):
-        # already an instance: (re)apply overrides and return
-        base = t.cast(T, spec)
-        if overrides:
-            _apply_overrides(base, overrides)
-    elif callable(spec):
-        base = spec()
-    else:
-        raise TypeError(
-            "make_shape expects a dataclass class/instance or a zero-arg factory"
-        )
-    return base

@@ -7,6 +7,23 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Changed
+
+- **BREAKING:** Renamed `pathbridge.extras.trace_converter(...)` keyword-only
+  parameters:
+  - `model_module` -> `destination_module`
+  - `converter` -> `facade_to_destination`
+  - `lift` -> `lift_functions`
+  - `root_tag` -> `facade_root_tag`
+- **BREAKING:** Renamed `pathbridge.extras.build_rules(...)` keyword-only
+  parameters:
+  - `model_module` -> `destination_module`
+  - `converter` -> `facade_to_destination`
+  - `shape` -> `facade_shape`
+  - `lift` -> `lift_functions`
+  - `root_tag` -> `facade_root_tag`
+- Removed old keyword aliases for the renamed arguments.
+
 ## [v0.3.0] - 2026-02-14
 
 ### Fixed

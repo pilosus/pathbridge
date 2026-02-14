@@ -99,10 +99,10 @@ def convert(src: Facade) -> ReturnXml:
 
 shape = make_shape(Facade, list_len=2)
 rules = build_rules(
-    model_module=types.SimpleNamespace(ReturnXml=ReturnXml, NameXml=NameXml),
-    converter=convert,
-    shape=shape,
-    root_tag="facade",
+    destination_module=types.SimpleNamespace(ReturnXml=ReturnXml, NameXml=NameXml),
+    facade_to_destination=convert,
+    facade_shape=shape,
+    facade_root_tag="facade",
 )
 
 compiled = compile_rules(rules)

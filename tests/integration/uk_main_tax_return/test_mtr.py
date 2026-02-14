@@ -63,11 +63,11 @@ ERROR_SA103S_PNL_LIST_IN_LIST_PATH_DOES_NOT_EXIST = HMRCXPathError(
 def mtr_rules() -> RawRulesMapT:
     shape = make_shape(facade.MTR, list_len=10)
     return build_rules(
-        model_module=destination,
-        converter=to_mtr_v1_1,
-        shape=shape,
-        lift=TRACE_LIFT_FUNCTIONS,
-        root_tag="mtr",
+        destination_module=destination,
+        facade_to_destination=to_mtr_v1_1,
+        facade_shape=shape,
+        lift_functions=TRACE_LIFT_FUNCTIONS,
+        facade_root_tag="mtr",
         destination_prefix="MTR",
     )
 
