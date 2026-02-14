@@ -49,7 +49,7 @@ errors = to_marshmallow([(loc, "Invalid phone")], compiled)
 `pathbridge.extras` provides helper utilities for generating rules from your
 converter:
 
-- `make_shape(...)`: build a truthy sample facade object.
+- `make_shape(...)`: build a populated sample facade object.
 - `build_rules(...)`: trace a sample conversion and produce `Destination -> Facade`
   mapping rules.
 
@@ -127,4 +127,23 @@ print(errors)
 #     'phones': {1: ['Invalid phone']},
 #   }
 # }
+```
+
+### Custom shape defaults
+
+`make_shape(...)` accepts `type_defaults` so you can override generated defaults
+for specific types:
+
+```python
+from decimal import Decimal
+
+shape = make_shape(
+    Facade,
+    list_len=2,
+    type_defaults={
+        str: "sample",
+        int: 42,
+        Decimal: Decimal("1.23"),
+    },
+)
 ```

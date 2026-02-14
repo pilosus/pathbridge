@@ -36,6 +36,44 @@ class _WithOptionalChild:
     child: _Child | None
 
 
+@dataclasses.dataclass
+class _ForwardParent:
+    child: "_ForwardChild"
+
+
+@dataclasses.dataclass
+class _ForwardChild:
+    value: str
+
+
+class XmlDate:
+    def __init__(self, year: int, month: int, day: int) -> None:
+        self.year = year
+        self.month = month
+        self.day = day
+
+
+@dataclasses.dataclass
+class _WithXmlDate:
+    stopped: XmlDate | None
+
+
+class XmlDateFromString:
+    def __init__(self, raw: str) -> None:
+        self.raw = raw
+
+    @classmethod
+    def from_string(cls, raw: str) -> "XmlDateFromString":
+        if raw != "1970-01-01":
+            raise ValueError(raw)
+        return cls(raw)
+
+
+@dataclasses.dataclass
+class _WithXmlDateFromString:
+    stopped: XmlDateFromString | None
+
+
 def _factory() -> _Model:
     return _Model(
         name="factory",
@@ -54,15 +92,15 @@ def test_make_shape_builds_truthy_dataclass_graph() -> None:
     shaped = make_shape(_Model, list_len=2)
 
     assert isinstance(shaped, _Model)
-    assert shaped.name == "x"
-    assert shaped.count == 1
+    assert shaped.name == ""
+    assert shaped.count == 0
     assert shaped.active is True
     assert isinstance(shaped.date, dt.date)
     assert shaped.status is _Status.OK
-    assert shaped.tags == ["x", "x"]
-    assert [c.label for c in shaped.children] == ["x", "x"]
-    assert shaped.meta == {"k": 1}
-    assert shaped.maybe == "x"
+    assert shaped.tags == ["", ""]
+    assert [c.label for c in shaped.children] == ["", ""]
+    assert shaped.meta == {}
+    assert shaped.maybe == ""
 
 
 def test_make_shape_applies_overrides_for_nested_and_indexed_paths() -> None:
@@ -77,7 +115,7 @@ def test_make_shape_applies_overrides_for_nested_and_indexed_paths() -> None:
     )
 
     assert shaped.name == "alice"
-    assert shaped.children[0].label == "x"  # not overridden
+    assert shaped.children[0].label == ""  # not overridden
     assert shaped.children[1].label == "override"
     assert shaped.meta["k"] == 99
 
@@ -112,9 +150,51 @@ def test_make_shape_populates_pep604_optional_dataclass_fields() -> None:
     shaped = make_shape(_WithOptionalChild)
 
     assert isinstance(shaped, _WithOptionalChild)
-    assert shaped.value == "x"
+    assert shaped.value == ""
     assert shaped.child is not None
     assert isinstance(shaped.child, _Child)
+
+
+def test_make_shape_resolves_forward_ref_dataclass_fields() -> None:
+    shaped = make_shape(_ForwardParent)
+
+    assert isinstance(shaped, _ForwardParent)
+    assert isinstance(shaped.child, _ForwardChild)
+    assert shaped.child.value == ""
+
+
+def test_make_shape_builds_xml_date_like_defaults() -> None:
+    shaped = make_shape(_WithXmlDate)
+
+    assert shaped.stopped is not None
+    assert isinstance(shaped.stopped, XmlDate)
+    assert shaped.stopped.year == 1970
+
+
+def test_make_shape_builds_xml_date_from_string_defaults() -> None:
+    shaped = make_shape(_WithXmlDateFromString)
+
+    assert shaped.stopped is not None
+    assert isinstance(shaped.stopped, XmlDateFromString)
+    assert shaped.stopped.raw == "1970-01-01"
+
+
+def test_make_shape_type_defaults_override_builtins() -> None:
+    shaped = make_shape(
+        _Model,
+        list_len=2,
+        type_defaults={
+            str: "s",
+            int: 9,
+            _Status: _Status.FAIL,
+        },
+    )
+
+    assert shaped.name == "s"
+    assert shaped.count == 9
+    assert shaped.status is _Status.FAIL
+    assert shaped.tags == ["s", "s"]
+    assert [c.label for c in shaped.children] == ["s", "s"]
 
 
 def test_make_shape_rejects_unsupported_spec() -> None:
