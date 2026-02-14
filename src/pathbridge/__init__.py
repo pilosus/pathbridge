@@ -13,4 +13,5 @@ __all__ = [
     "translate_location",
     "insert_error",
     "to_marshmallow",
+    "version",
 ]

@@ -194,7 +194,9 @@ def _converter_nominee(src: _FacadeNominee) -> _MtrWithNominee:
 def test_trace_converter_records_scalar_and_nested_paths() -> None:
     model_module = types.SimpleNamespace(Outer=_OuterDest, Inner=_InnerDest)
 
-    with trace_converter(model_module=model_module, converter=_converter_plain) as run:
+    with trace_converter(
+        destination_module=model_module, facade_to_destination=_converter_plain
+    ) as run:
         result, rules = run(_Facade(name="alice", code="abc", color_name="RED"))
 
     assert isinstance(result, _OuterDest)
@@ -209,11 +211,13 @@ def test_build_rules_matches_trace_converter_output() -> None:
     shape = _Facade(name="bob", code="xyz", color_name="RED")
 
     via_helper = build_rules(
-        model_module=model_module,
-        converter=_converter_plain,
-        shape=shape,
+        destination_module=model_module,
+        facade_to_destination=_converter_plain,
+        facade_shape=shape,
     )
-    with trace_converter(model_module=model_module, converter=_converter_plain) as run:
+    with trace_converter(
+        destination_module=model_module, facade_to_destination=_converter_plain
+    ) as run:
         _result, via_context = run(shape)
 
     assert via_helper == via_context
@@ -224,9 +228,9 @@ def test_trace_converter_lift_preserves_source_path_and_restores_function() -> N
     original = _normalize
 
     with trace_converter(
-        model_module=model_module,
-        converter=_converter_with_lift,
-        lift=("_normalize",),
+        destination_module=model_module,
+        facade_to_destination=_converter_with_lift,
+        lift_functions=("_normalize",),
     ) as run:
         _result, rules = run(_Facade(name="alice", code="  abc  ", color_name="RED"))
 
@@ -238,8 +242,8 @@ def test_trace_converter_handles_enum_getitem_with_tagged_key() -> None:
     model_module = types.SimpleNamespace(EnumDest=_EnumDest)
 
     with trace_converter(
-        model_module=model_module,
-        converter=_converter_enum_lookup,
+        destination_module=model_module,
+        facade_to_destination=_converter_enum_lookup,
     ) as run:
         result, rules = run(_Facade(name="alice", code="abc", color_name="RED"))
 
@@ -250,9 +254,9 @@ def test_trace_converter_handles_enum_getitem_with_tagged_key() -> None:
 def test_trace_converter_lift_preserves_path_for_non_scalar_outputs() -> None:
     model_module = types.SimpleNamespace(WithDateLike=_WithDateLike, DateLike=_DateLike)
     with trace_converter(
-        model_module=model_module,
-        converter=_converter_date_like,
-        lift=("_to_date_like",),
+        destination_module=model_module,
+        facade_to_destination=_converter_date_like,
+        lift_functions=("_to_date_like",),
     ) as run:
         _result, rules = run(_Facade(name="alice", code="abc", color_name="RED"))
 
@@ -269,10 +273,10 @@ def test_trace_converter_destination_prefix_and_parent_paths() -> None:
     )
 
     rules = build_rules(
-        model_module=model_module,
-        converter=_converter_declaration,
-        shape=facade,
-        root_tag="mtr",
+        destination_module=model_module,
+        facade_to_destination=_converter_declaration,
+        facade_shape=facade,
+        facade_root_tag="mtr",
         destination_prefix="MTR",
     )
 
@@ -286,10 +290,10 @@ def test_trace_converter_destination_prefix_and_parent_paths() -> None:
 def test_trace_converter_prefers_child_class_name_over_parent_field_metadata() -> None:
     model_module = types.SimpleNamespace(MTR=_MtrWithSa110, Sa110=Sa110)
     rules = build_rules(
-        model_module=model_module,
-        converter=_converter_sa110,
-        shape=_FacadeSa110(sa110="x"),
-        root_tag="mtr",
+        destination_module=model_module,
+        facade_to_destination=_converter_sa110,
+        facade_shape=_FacadeSa110(sa110="x"),
+        facade_root_tag="mtr",
         destination_prefix="MTR",
     )
 
@@ -312,10 +316,10 @@ def test_trace_converter_prefers_field_name_for_reused_structure_types() -> None
         )
     )
     rules = build_rules(
-        model_module=model_module,
-        converter=_converter_nominee,
-        shape=facade,
-        root_tag="mtr",
+        destination_module=model_module,
+        facade_to_destination=_converter_nominee,
+        facade_shape=facade,
+        facade_root_tag="mtr",
         destination_prefix="MTR",
     )
 

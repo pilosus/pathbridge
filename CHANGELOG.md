@@ -7,6 +7,39 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Added
+
+- New `pathbridge compile` CLI command to generate Python modules with
+  `RAW_RULES` and `COMPILED_RULES`.
+- `pathbridge compile` supports both import references and file-path
+  references for facade/destination/converter inputs.
+
+### Changed
+
+- **BREAKING:** Renamed `pathbridge.extras.trace_converter(...)` keyword-only
+  parameters:
+  - `model_module` -> `destination_module`
+  - `converter` -> `facade_to_destination`
+  - `lift` -> `lift_functions`
+  - `root_tag` -> `facade_root_tag`
+- **BREAKING:** Renamed `pathbridge.extras.build_rules(...)` keyword-only
+  parameters:
+  - `model_module` -> `destination_module`
+  - `converter` -> `facade_to_destination`
+  - `shape` -> `facade_shape`
+  - `lift` -> `lift_functions`
+  - `root_tag` -> `facade_root_tag`
+- Removed old keyword aliases for the renamed arguments.
+- **BREAKING:** Renamed `pathbridge compile` options:
+  - `--model-module` -> `--destination-module`
+  - `--converter` -> `--facade-to-destination`
+  - `--rules-root-tag` -> `--facade-root-tag`
+  - `--rules-lift` -> `--lift-functions`
+- **BREAKING:** `--output-package` now expects a dotted package name
+  (for example `generated.rules`) instead of a filesystem path.
+- Added `--output-dir` for choosing where generated package directories are created.
+
+
 ## [v0.3.0] - 2026-02-14
 
 ### Fixed

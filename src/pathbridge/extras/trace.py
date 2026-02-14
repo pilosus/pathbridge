@@ -17,44 +17,44 @@ from pathbridge.types import RawRulesMapT
 
 def trace_converter(
     *,
-    model_module: t.Any,
-    converter: t.Callable[[t.Any], t.Any],
-    lift: t.Iterable[str] | None = None,
-    root_tag: str = "root",
+    destination_module: t.Any,
+    facade_to_destination: t.Callable[[t.Any], t.Any],
+    lift_functions: t.Iterable[str] | None = None,
+    facade_root_tag: str = "root",
     destination_prefix: str | None = None,
 ) -> TraceContext:
     """
     Context manager that enables tracing patches. Yields a callable:
-        run(shape) -> (result, rules_dict)
+        run(facade_shape) -> (result, rules_dict)
 
-    - model_module: module where destination dataclasses/enums live
-    - converter: your converter callable (facade -> destination model)
-    - lift: names to 'lift' through (functions that should preserve Tagged)
-            Accepts simple names resolvable in converter's globals, or fully
+    - destination_module: module where destination dataclasses/enums live
+    - facade_to_destination: converter callable (facade -> destination model)
+    - lift_functions: names to 'lift' through (functions that should preserve Tagged)
+            Accepts simple names resolvable in converter globals, or fully
             qualified 'pkg.mod:func' strings.
-    - root_tag: starting facade segment, e.g. "mtr"
+    - facade_root_tag: starting facade segment, e.g. "mtr"
     - destination_prefix: optional prefix for destination XML path segments,
             e.g. "MTR" to render "MTR:ElementName[1]"
 
     Returns a context manager. Inside it, call the yielded function with a *facade*
-    instance (your shape); it returns (result_object, rules_dict).
+    instance (your facade shape); it returns (result_object, rules_dict).
     """
     return TraceContext(
-        model_module=model_module,
-        converter=converter,
-        lift=tuple(lift or ()),
-        root_tag=root_tag,
+        destination_module=destination_module,
+        facade_to_destination=facade_to_destination,
+        lift_functions=tuple(lift_functions or ()),
+        facade_root_tag=facade_root_tag,
         destination_prefix=destination_prefix,
     )
 
 
 def build_rules(
     *,
-    model_module: t.Any,
-    converter: t.Callable[[t.Any], t.Any],
-    shape: t.Any,
-    lift: t.Iterable[str] | None = None,
-    root_tag: str = "root",
+    destination_module: t.Any,
+    facade_to_destination: t.Callable[[t.Any], t.Any],
+    facade_shape: t.Any,
+    lift_functions: t.Iterable[str] | None = None,
+    facade_root_tag: str = "root",
     destination_prefix: str | None = None,
 ) -> RawRulesMapT:
     """
@@ -62,18 +62,19 @@ def build_rules(
 
     This is a convenience wrapper around `trace_converter(...)`. It patches
     destination dataclasses/enums for the duration of the call, executes
-    `converter(shape)`, and captures leaf assignments as
+    `facade_to_destination(facade_shape)`, and captures leaf assignments as
     `{destination_path: facade_path}`.
 
     Args:
-        model_module: Module that contains destination dataclasses/enums used
-            by `converter`.
-        converter: Callable that converts facade input into destination model
-            objects.
-        shape: Sample facade object to pass into `converter` while tracing.
-        lift: Optional helper function names that should preserve path tags
+        destination_module: Module that contains destination dataclasses/enums used
+            by `facade_to_destination`.
+        facade_to_destination: Callable that converts facade input into destination
+            model objects.
+        facade_shape: Sample facade object to pass into `facade_to_destination`
+            while tracing.
+        lift_functions: Optional helper function names that should preserve path tags
             (`"name"` or `"pkg.mod:func"`).
-        root_tag: Root token used as the facade-path prefix in recorded rules.
+        facade_root_tag: Root token used as the facade-path prefix in recorded rules.
         destination_prefix: Optional destination segment prefix
             (e.g. `"MTR"` -> `MTR:Element[1]`).
 
@@ -81,13 +82,13 @@ def build_rules(
         Mapping of destination paths to facade paths (`DEST -> FACADE`).
     """
     with trace_converter(
-        model_module=model_module,
-        converter=converter,
-        lift=lift,
-        root_tag=root_tag,
+        destination_module=destination_module,
+        facade_to_destination=facade_to_destination,
+        lift_functions=lift_functions,
+        facade_root_tag=facade_root_tag,
         destination_prefix=destination_prefix,
     ) as run:
-        _, rules = run(shape)
+        _, rules = run(facade_shape)
         return rules
 
 
@@ -262,16 +263,16 @@ class TraceContext:
     def __init__(
         self,
         *,
-        model_module: t.Any,
-        converter: t.Callable[[t.Any], t.Any],
-        lift: tuple[str, ...],
-        root_tag: str,
+        destination_module: t.Any,
+        facade_to_destination: t.Callable[[t.Any], t.Any],
+        lift_functions: tuple[str, ...],
+        facade_root_tag: str,
         destination_prefix: str | None,
     ) -> None:
-        self.model_module = model_module
-        self.converter = converter
-        self.lift = lift
-        self.root_tag = root_tag
+        self.destination_module = destination_module
+        self.facade_to_destination = facade_to_destination
+        self.lift_functions = lift_functions
+        self.facade_root_tag = facade_root_tag
         self.destination_prefix = destination_prefix
 
         self._orig_inits: dict[type, InitCallable] = {}
@@ -298,8 +299,8 @@ class TraceContext:
         self._restore_dataclasses()
 
     def _run(self, facade_root: t.Any) -> tuple[t.Any, RawRulesMapT]:
-        proxied = _wrap_src(facade_root, self.root_tag)
-        result = self.converter(proxied)
+        proxied = _wrap_src(facade_root, self.facade_root_tag)
+        result = self.facade_to_destination(proxied)
         if dataclasses.is_dataclass(result):
             return result, _leaves_to_rules(
                 _get_leaves(result), self.destination_prefix
@@ -320,7 +321,7 @@ class TraceContext:
                 if isinstance(child, type):
                     visit(child)
 
-        for _, obj in vars(self.model_module).items():
+        for _, obj in vars(self.destination_module).items():
             if isinstance(obj, type):
                 visit(obj)
         return out
@@ -429,13 +430,13 @@ class TraceContext:
             imported_mod = __import__(mod_name, fromlist=[attr])
             return (imported_mod, attr)
 
-        converter_mod = inspect.getmodule(self.converter)
-        if converter_mod and hasattr(converter_mod, spec):
-            return (converter_mod, spec)
+        facade_converter_module = inspect.getmodule(self.facade_to_destination)
+        if facade_converter_module and hasattr(facade_converter_module, spec):
+            return (facade_converter_module, spec)
         return None
 
     def _patch_lift_functions(self) -> None:
-        for name in self.lift:
+        for name in self.lift_functions:
             resolved = self._resolve_lift_target(name)
             if not resolved:
                 continue

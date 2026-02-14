@@ -1,4 +1,4 @@
-.PHONY: uv deps test test-cov test-matrix-setup test-matrix lint format typecheck check check-matrix clean build publish-test publish
+.PHONY: uv deps test test-cov test-matrix-setup test-matrix lint format typecheck check ci clean build publish-test publish
 
 UV_EXTRA_ARGS ?=
 PY_MATRIX ?= 3.10 3.11 3.12 3.13 3.14
@@ -42,7 +42,7 @@ typecheck:
 
 check: lint typecheck test
 
-check-matrix: lint typecheck test-matrix
+ci: lint typecheck test-matrix
 
 clean:
 	rm -rf build/ dist/ *.egg-info/ src/*.egg-info/
