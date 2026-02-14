@@ -7,7 +7,17 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
-...
+### Fixed
+
+- make shaper resolve type hints/forward refs and support configurable `type_defaults`
+- match reference default placeholders ("", 0, {}) and improve `XmlDate`-like defaults
+- fix tracer path generation for nested dataclasses, parent rules, and destination prefixing
+- preserve lifted tags for non-scalar helper outputs
+- refine nested segment naming
+
+### Added
+
+- Extensive integration testing based on the Main Tax Return (MTR v1.1) Schema used by HMRC.
 
 ## [v0.2.0] - 2026-02-13
 
