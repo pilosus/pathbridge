@@ -4,7 +4,7 @@ build-backend = "hatchling.build"
 
 [project]
 name = "PathBridge"
-version = "0.2.0"
+version = "0.3.0"
 description = "Translate validator error locations back to your application's schema paths and emit structured errors"
 readme = "README.md"
 license = "MIT"

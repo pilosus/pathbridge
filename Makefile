@@ -1,4 +1,4 @@
-.PHONY: uv deps test test-cov test-matrix-setup test-matrix lint format typecheck check clean build publish-test publish
+.PHONY: uv deps test test-cov test-matrix-setup test-matrix lint format typecheck check check-matrix clean build publish-test publish
 
 UV_EXTRA_ARGS ?=
 PY_MATRIX ?= 3.10 3.11 3.12 3.13 3.14
@@ -21,7 +21,7 @@ test-cov:
 test-matrix-setup: uv
 	@uv python install $(PY_MATRIX)
 
-test-matrix: uv
+test-matrix: test-matrix-setup
 	@set -e; \
 	for py in $(PY_MATRIX); do \
 		echo "==> Running tests on Python $$py"; \
@@ -41,6 +41,8 @@ typecheck:
 	@uv run $(UV_EXTRA_ARGS) mypy
 
 check: lint typecheck test
+
+check-matrix: lint typecheck test-matrix
 
 clean:
 	rm -rf build/ dist/ *.egg-info/ src/*.egg-info/

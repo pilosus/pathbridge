@@ -18,3 +18,5 @@ TODO.rst
 htmlcov/
 __pycache__/
 _version.py
+.claude/settings.local.json
+CLAUDE.local.md

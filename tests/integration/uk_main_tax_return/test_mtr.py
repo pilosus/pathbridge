@@ -202,7 +202,10 @@ def test_to_marshmallow_reports_unmatched_real_world_error_in_meta(
     )
 
     assert (
-        translate_location(ERROR_SA103S_PNL_LIST_IN_LIST_PATH_DOES_NOT_EXIST.location, mtr_compiled_rules)
+        translate_location(
+            ERROR_SA103S_PNL_LIST_IN_LIST_PATH_DOES_NOT_EXIST.location,
+            mtr_compiled_rules,
+        )
         is None
     )
     assert result == {
