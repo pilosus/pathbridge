@@ -40,11 +40,15 @@ jobs:
       - name: Type check
         run: make typecheck
 
+      - name: Build docs
+        if: matrix.python-version == '3.12'
+        run: make docs-build
+
       - name: Test
         run: make test
 
   build:
-    name: Build & Publish
+    name: Build & Publish Package
     runs-on: ubuntu-latest
     needs: test
     # Run only on pushing a version tag

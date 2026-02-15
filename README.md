@@ -14,13 +14,14 @@ Your users need errors on **your model** (Pydantic/Marshmallow/dataclasses). Pat
 - Prefix & case tolerant (e.g., `hd:`, `MTR:`).
 - Fixes 1-based indices to Python 0-based.
 - Works with plain mappings or an optional tracer (add-on) that learns rules from your converter.
+- Includes `make_shape` (shaper) and `build_rules` (tracer) to generate rules
+  from destination classes and your converter.
 
 ## Install
 
 ```bash
 pip install pathbridge
 ```
-
 
 ## Quick start
 
@@ -184,15 +185,11 @@ pathbridge compile \
   --lift-functions decode_attachment
 ```
 
-## Real-world reference
+## Help
 
-For a real-life example of PathBridge usage, see:
+See [documentation](https://pathbridge.readthedocs.io/) for more details.
 
-- `tests/integration/uk_main_tax_return`
+## Real-world example
 
-This integration setup includes:
-
-- facade models (`facade/mtr_facade.py`)
-- destination models generated from XSD (`destination/mtr_v1_1.py`)
-- facade-to-destination converter (`converter/mtr_converter.py`)
-- tracer-based rules generation and translation assertions (`test_mtr.py`)
+For a real-life example of PathBridge usage, see
+[HMRC Main Tax Return integration](https://github.com/pilosus/pathbridge/tree/main/tests/integration/uk_main_tax_return).

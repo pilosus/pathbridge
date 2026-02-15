@@ -1,4 +1,4 @@
-.PHONY: uv deps test test-cov test-matrix-setup test-matrix lint format typecheck check ci clean build publish-test publish
+.PHONY: uv deps test test-cov test-matrix-setup test-matrix lint format typecheck docs-build docs-serve check ci clean build publish-test publish
 
 UV_EXTRA_ARGS ?=
 PY_MATRIX ?= 3.10 3.11 3.12 3.13 3.14
@@ -40,7 +40,13 @@ lint: ruff-format ruff-check
 typecheck:
 	@uv run $(UV_EXTRA_ARGS) mypy
 
-check: lint typecheck test
+docs-build:
+	@uv run --extra docs $(UV_EXTRA_ARGS) mkdocs build --strict
+
+docs-serve:
+	@uv run --extra docs $(UV_EXTRA_ARGS) mkdocs serve
+
+check: lint typecheck test docs-build
 
 ci: lint typecheck test-matrix
 
