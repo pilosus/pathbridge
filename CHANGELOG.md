@@ -7,6 +7,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [v0.5.0] - 2026-02-15
+
 ### Added
 
 - MkDocs documentation site (`mkdocs.yml`) with dedicated pages for:
@@ -103,7 +105,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - Initial project structure
 
-[Unreleased]: https://github.com/pilosus/pathbridge/compare/v0.4.0...HEAD
+[Unreleased]: https://github.com/pilosus/pathbridge/compare/v0.5.0...HEAD
+[v0.5.0]: https://github.com/pilosus/pathbridge/compare/v0.4.0...v0.5.0
 [v0.4.0]: https://github.com/pilosus/pathbridge/compare/v0.3.0...v0.4.0
 [v0.3.0]: https://github.com/pilosus/pathbridge/compare/v0.2.0...v0.3.0
 [v0.2.0]: https://github.com/pilosus/pathbridge/compare/v0.1.0...v0.2.0

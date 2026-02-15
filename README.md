@@ -5,6 +5,7 @@
 [![PyPI version](https://img.shields.io/pypi/v/pathbridge.svg)](https://pypi.org/project/pathbridge/)
 [![License](https://img.shields.io/badge/license-MIT-blue.svg)](LICENSE)
 [![Python](https://img.shields.io/pypi/pyversions/pathbridge.svg)](https://pypi.org/project/pathbridge/)
+[![Documentation](https://readthedocs.org/projects/pathbridge/badge/?version=latest)](https://pathbridge.readthedocs.io/en/latest/)
 
 ## Why
 
