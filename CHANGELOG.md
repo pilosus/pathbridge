@@ -7,6 +7,15 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Added
+
+- MkDocs documentation site (`mkdocs.yml`) with dedicated pages for:
+  getting started, extras, CLI, API reference, and a real-life HMRC MTR example tutorial.
+- Documentation build tooling:
+  - `make docs-build` and `make docs-serve`
+- Read the Docs build configuration via `.readthedocs.yaml`.
+
+
 ## [v0.4.0] - 2026-02-14
 
 ### Added

@@ -1,0 +1,23 @@
+site_name: PathBridge
+site_description: Translate validator error locations to application schema paths.
+repo_url: https://github.com/pilosus/pathbridge
+repo_name: pilosus/pathbridge
+docs_dir: docs
+strict: true
+
+theme:
+  name: readthedocs
+
+nav:
+  - Home: index.md
+  - Getting Started: getting-started.md
+  - Extras: extras.md
+  - CLI: cli.md
+  - API Reference: api-reference.md
+  - Real-life Example: real-life-example.md
+
+markdown_extensions:
+  - admonition
+  - tables
+  - toc:
+      permalink: true
