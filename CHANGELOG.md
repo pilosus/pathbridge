@@ -10,12 +10,15 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Added
 
 - New ISO 20022 integration example under `tests/integration/iso20022_payments`.
+- New OpenAPI JSON Schema integration example under `tests/integration/openapi_json_schema`.
 
 ### Changed
 
 - Renamed HMRC integration package path:
   `tests/integration/uk_main_tax_return` ->
   `tests/integration/hmrc_main_tax_return`.
+- Expanded documentation examples into a consolidated "Real-life Examples"
+  page covering HMRC MTR, OpenAPI JSON Schema, and ISO 20022 integrations.
 
 ## [v0.5.0] - 2026-02-15
 
