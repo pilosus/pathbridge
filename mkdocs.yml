@@ -14,7 +14,7 @@ nav:
   - Extras: extras.md
   - CLI: cli.md
   - API Reference: api-reference.md
-  - Real-life Example: real-life-example.md
+  - Real-life Examples: real-life-example.md
 
 markdown_extensions:
   - admonition

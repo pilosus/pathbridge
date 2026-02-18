@@ -1,88 +1,49 @@
-# Real-life Example
+# Real-life Examples
 
-Full working example code: [HMRC Main Tax Return integration](https://github.com/pilosus/pathbridge/tree/main/tests/integration/hmrc_main_tax_return).
-Additional example with XSD and payment rejection fixtures: [ISO 20022 payments integration](https://github.com/pilosus/pathbridge/tree/main/tests/integration/iso20022_payments).
-Additional request/response example: [OpenAPI JSON Schema integration](https://github.com/pilosus/pathbridge/tree/main/tests/integration/openapi_json_schema).
+PathBridge includes multiple end-to-end integration examples you can reuse as
+templates for your own validators and converters.
 
-## What this example is about
+## HMRC Main Tax Return (XSD/XPath)
 
-This integration models HMRC Self Assessment XML using the Main Tax Return schema
-(MTR v1.1). The schema file lives in the example and is treated as source of truth.
+- Code: [tests/integration/hmrc_main_tax_return](https://github.com/pilosus/pathbridge/tree/main/tests/integration/hmrc_main_tax_return)
+- Validator shape: XML/XSD with deep XPath error locations
+- Highlights:
+  - generated destination dataclasses from HMRC schema (`xsdata`)
+  - hand-written facade dataclasses and converter
+  - translation of HMRC-style locations to facade paths and Marshmallow errors
 
-## Step 1. Generate destination dataclasses from XSD
-
-We use `xsdata` to generate Python dataclasses from the HMRC schema:
+Run:
 
 ```bash
-uv run xsdata generate schema/MTR-v1-1.xsd --package destination
+uv run pytest -vvs tests/integration/hmrc_main_tax_return/test_mtr.py
 ```
 
-These generated classes mirror XML 1:1, which is ideal for serialization but less
-ideal as an internal application API.
+## OpenAPI JSON Schema (Request/Response)
 
-## Step 2. Keep a facade model for your internal API
+- Code: [tests/integration/openapi_json_schema](https://github.com/pilosus/pathbridge/tree/main/tests/integration/openapi_json_schema)
+- Validator shape: OpenAPI request/response JSON schema validation errors
+- Highlights:
+  - request and response validation in one integration flow
+  - fixtures for realistic JSON schema violations (format, enum, minimum, pattern)
+  - `_meta` misses coverage for unmapped/out-of-shape locations
 
-In a real application, we usually do not expose generated destination dataclasses
-directly. Instead we use facade dataclasses to:
+Run:
 
-- keep internal API stable even if external schema changes
-- control naming and field shapes for application code
-- use app-friendly types and structures
-
-Then we map facade -> destination in a converter.
-
-## Step 3. See what HMRC validation errors look like
-
-A real error example from the tests:
-
-```text
-location:
-/hd:GovTalkMessage[1]/hd:Body[1]/MTR:IRenvelope[1]/MTR:MTR[1]/MTR:SA103S[1]/MTR:BusinessDetails[1]/MTR:BusinessDescription[1]
-
-message:
-Invalid content found at element 'BusinessDescription'
+```bash
+uv run pytest -vvs tests/integration/openapi_json_schema/test_openapi_json_schema.py
 ```
 
-This path is in HMRC XML terms, not in your facade model terms.
+## ISO 20022 Payments (XML + Business Rejections)
 
-## Step 4. Use PathBridge to translate into facade-shaped errors
+- Code: [tests/integration/iso20022_payments](https://github.com/pilosus/pathbridge/tree/main/tests/integration/iso20022_payments)
+- Validator shape: payment XML location errors plus business rejection reason codes
+- Highlights:
+  - `pain.001`-style path mapping with list-heavy structures
+  - fixtures for schema-style errors (`cvc-*`) and business reasons (`AM04`, `AC03`, `RC01`)
+  - namespace/envelope prefix handling and Marshmallow folding
 
-```python
-from pathbridge import compile_rules, to_marshmallow, translate_location
-from pathbridge.extras import build_rules, make_shape
-from tests.integration.hmrc_main_tax_return.converter.mtr_converter import to_mtr_v1_1
-from tests.integration.hmrc_main_tax_return.destination import mtr_v1_1 as destination
-from tests.integration.hmrc_main_tax_return.facade import mtr_facade as facade
+Run:
 
-shape = make_shape(facade.MTR, list_len=10)
-rules = build_rules(
-    destination_module=destination,
-    facade_to_destination=to_mtr_v1_1,
-    facade_shape=shape,
-    facade_root_tag="mtr",
-    destination_prefix="MTR",
-)
-compiled = compile_rules(rules)
-
-location = "/hd:GovTalkMessage[1]/hd:Body[1]/MTR:IRenvelope[1]/MTR:MTR[1]/MTR:SA103S[1]/MTR:BusinessDetails[1]/MTR:BusinessDescription[1]"
-message = "Invalid content found at element 'BusinessDescription'"
-
-facade_path = translate_location(location, compiled)
-# "mtr/sa103s[0]/business_details/business_description"
-
-errors = to_marshmallow([(location, message)], compiled)
-# {
-#   "mtr": {
-#     "sa103s": {
-#       0: {
-#         "business_details": {
-#           "business_description": ["Invalid content found at element 'BusinessDescription'"]
-#         }
-#       }
-#     }
-#   }
-# }
+```bash
+uv run pytest -vvs tests/integration/iso20022_payments/test_iso20022_payments.py
 ```
-
-This is the key payoff: external XPath errors are transformed into internal,
-facade-aligned validation errors your application can return directly.

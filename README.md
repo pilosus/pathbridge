@@ -190,7 +190,7 @@ pathbridge compile \
 
 See [documentation](https://pathbridge.readthedocs.io/) for more details.
 
-## Real-world example
+## Real-world examples
 
 Real-life PathBridge integrations:
 

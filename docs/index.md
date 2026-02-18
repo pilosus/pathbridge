@@ -45,3 +45,4 @@ errors = to_marshmallow([(location, "Invalid phone")], compiled)
 - Read [Getting Started](getting-started.md) for path-matching behavior and usage details.
 - Use [Extras](extras.md) to generate rules by tracing your converter automatically.
 - Use the [CLI](cli.md) to generate importable Python modules with compiled rules.
+- Explore [Real-life Examples](real-life-example.md) for HMRC MTR, OpenAPI, and ISO 20022 integrations.
