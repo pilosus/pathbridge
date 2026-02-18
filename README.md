@@ -190,9 +190,10 @@ pathbridge compile \
 
 See [documentation](https://pathbridge.readthedocs.io/) for more details.
 
-## Real-world example
+## Real-world examples
 
 Real-life PathBridge integrations:
 
 - [HMRC Main Tax Return integration](https://github.com/pilosus/pathbridge/tree/main/tests/integration/hmrc_main_tax_return)
+- [OpenAPI JSON Schema integration](https://github.com/pilosus/pathbridge/tree/main/tests/integration/openapi_json_schema)
 - [ISO 20022 payments integration](https://github.com/pilosus/pathbridge/tree/main/tests/integration/iso20022_payments)
