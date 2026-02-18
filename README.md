@@ -192,5 +192,7 @@ See [documentation](https://pathbridge.readthedocs.io/) for more details.
 
 ## Real-world example
 
-For a real-life example of PathBridge usage, see
-[HMRC Main Tax Return integration](https://github.com/pilosus/pathbridge/tree/main/tests/integration/uk_main_tax_return).
+Real-life PathBridge integrations:
+
+- [HMRC Main Tax Return integration](https://github.com/pilosus/pathbridge/tree/main/tests/integration/uk_main_tax_return)
+- [ISO 20022 payments integration](https://github.com/pilosus/pathbridge/tree/main/tests/integration/iso20022_payments)
