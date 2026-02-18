@@ -2,6 +2,7 @@
 
 Full working example code: [HMRC Main Tax Return integration](https://github.com/pilosus/pathbridge/tree/main/tests/integration/hmrc_main_tax_return).
 Additional example with XSD and payment rejection fixtures: [ISO 20022 payments integration](https://github.com/pilosus/pathbridge/tree/main/tests/integration/iso20022_payments).
+Additional request/response example: [OpenAPI JSON Schema integration](https://github.com/pilosus/pathbridge/tree/main/tests/integration/openapi_json_schema).
 
 ## What this example is about
 
