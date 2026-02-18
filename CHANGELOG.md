@@ -7,6 +7,16 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Added
+
+- New ISO 20022 integration example under `tests/integration/iso20022_payments`.
+
+### Changed
+
+- Renamed HMRC integration package path:
+  `tests/integration/uk_main_tax_return` ->
+  `tests/integration/hmrc_main_tax_return`.
+
 ## [v0.5.0] - 2026-02-15
 
 ### Added
