@@ -1,6 +1,6 @@
 # Real-life Example
 
-Full working example code: [HMRC Main Tax Return integration](https://github.com/pilosus/pathbridge/tree/main/tests/integration/uk_main_tax_return).
+Full working example code: [HMRC Main Tax Return integration](https://github.com/pilosus/pathbridge/tree/main/tests/integration/hmrc_main_tax_return).
 Additional example with XSD and payment rejection fixtures: [ISO 20022 payments integration](https://github.com/pilosus/pathbridge/tree/main/tests/integration/iso20022_payments).
 
 ## What this example is about
@@ -49,9 +49,9 @@ This path is in HMRC XML terms, not in your facade model terms.
 ```python
 from pathbridge import compile_rules, to_marshmallow, translate_location
 from pathbridge.extras import build_rules, make_shape
-from tests.integration.uk_main_tax_return.converter.mtr_converter import to_mtr_v1_1
-from tests.integration.uk_main_tax_return.destination import mtr_v1_1 as destination
-from tests.integration.uk_main_tax_return.facade import mtr_facade as facade
+from tests.integration.hmrc_main_tax_return.converter.mtr_converter import to_mtr_v1_1
+from tests.integration.hmrc_main_tax_return.destination import mtr_v1_1 as destination
+from tests.integration.hmrc_main_tax_return.facade import mtr_facade as facade
 
 shape = make_shape(facade.MTR, list_len=10)
 rules = build_rules(

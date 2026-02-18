@@ -170,9 +170,9 @@ pathbridge compile \
   --output-dir . \
   --output-package mtr.translation_rules \
   --output-module compiled \
-  --facade-class ./tests/integration/uk_main_tax_return/facade/mtr_facade.py:MTR \
-  --destination-module ./tests/integration/uk_main_tax_return/destination/mtr_v1_1.py \
-  --facade-to-destination ./tests/integration/uk_main_tax_return/converter/mtr_converter.py:to_mtr_v1_1 \
+  --facade-class ./tests/integration/hmrc_main_tax_return/facade/mtr_facade.py:MTR \
+  --destination-module ./tests/integration/hmrc_main_tax_return/destination/mtr_v1_1.py \
+  --facade-to-destination ./tests/integration/hmrc_main_tax_return/converter/mtr_converter.py:to_mtr_v1_1 \
   --shape-list-len 10 \
   --facade-root-tag mtr \
   --lift-functions _yes \
@@ -194,5 +194,5 @@ See [documentation](https://pathbridge.readthedocs.io/) for more details.
 
 Real-life PathBridge integrations:
 
-- [HMRC Main Tax Return integration](https://github.com/pilosus/pathbridge/tree/main/tests/integration/uk_main_tax_return)
+- [HMRC Main Tax Return integration](https://github.com/pilosus/pathbridge/tree/main/tests/integration/hmrc_main_tax_return)
 - [ISO 20022 payments integration](https://github.com/pilosus/pathbridge/tree/main/tests/integration/iso20022_payments)

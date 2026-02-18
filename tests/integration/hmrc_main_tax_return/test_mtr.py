@@ -7,9 +7,9 @@ pytest.importorskip("xsdata.models.datatype")
 from pathbridge import compile_rules, to_marshmallow, translate_location
 from pathbridge.extras import build_rules, make_shape
 from pathbridge.types import CompiledRulesT, RawRulesMapT
-from tests.integration.uk_main_tax_return.converter.mtr_converter import to_mtr_v1_1
-from tests.integration.uk_main_tax_return.destination import mtr_v1_1 as destination
-from tests.integration.uk_main_tax_return.facade import mtr_facade as facade
+from tests.integration.hmrc_main_tax_return.converter.mtr_converter import to_mtr_v1_1
+from tests.integration.hmrc_main_tax_return.destination import mtr_v1_1 as destination
+from tests.integration.hmrc_main_tax_return.facade import mtr_facade as facade
 
 TRACE_LIFT_FUNCTIONS = (
     "_yes",

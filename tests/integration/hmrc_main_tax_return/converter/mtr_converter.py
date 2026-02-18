@@ -1,8 +1,8 @@
 from __future__ import annotations
 
-import tests.integration.uk_main_tax_return.destination.mtr_v1_1 as mtr
-import tests.integration.uk_main_tax_return.facade.mtr_facade as d
-from tests.integration.uk_main_tax_return.converter.utils import (
+import tests.integration.hmrc_main_tax_return.destination.mtr_v1_1 as mtr
+import tests.integration.hmrc_main_tax_return.facade.mtr_facade as d
+from tests.integration.hmrc_main_tax_return.converter.utils import (
     decimal_str_or_none,
     decode_attachment,
     xml_date_or_none,

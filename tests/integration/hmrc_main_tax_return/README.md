@@ -6,7 +6,7 @@ Source: [HMRC](https://www.gov.uk/government/publications/self-assessment-techni
 ## Structure
 
 ```
-uk_main_tax_return/
+hmrc_main_tax_return/
 ├── schema/
 │   └── MTR-v1-1.xsd              # HMRC XSD schema (source of truth)
 ├── destination/
