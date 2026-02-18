@@ -40,4 +40,3 @@ class CustomerCreditTransferInitiation:
 @dataclass(frozen=True, kw_only=True, slots=True)
 class PaymentInitiationRequest:
     customer_credit_transfer_initiation: CustomerCreditTransferInitiation
-

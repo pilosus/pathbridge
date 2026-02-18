@@ -11,4 +11,3 @@ __all__ = [
     "SCHEMA_REFERENCES",
     "XSD_ERROR_FIXTURES",
 ]
-

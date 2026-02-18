@@ -53,4 +53,3 @@ def to_pain_001_001_09(data: facade.PaymentInitiationRequest) -> pain.Document:
             ],
         )
     )
-

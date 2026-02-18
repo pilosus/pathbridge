@@ -7,6 +7,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [v0.5.1] - 2026-02-18
+
 ### Added
 
 - New ISO 20022 integration example under `tests/integration/iso20022_payments`.
@@ -118,7 +120,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - Initial project structure
 
-[Unreleased]: https://github.com/pilosus/pathbridge/compare/v0.5.0...HEAD
+[Unreleased]: https://github.com/pilosus/pathbridge/compare/v0.5.1...HEAD
+[v0.5.1]: https://github.com/pilosus/pathbridge/compare/v0.5.0...v0.5.1
 [v0.5.0]: https://github.com/pilosus/pathbridge/compare/v0.4.0...v0.5.0
 [v0.4.0]: https://github.com/pilosus/pathbridge/compare/v0.3.0...v0.4.0
 [v0.3.0]: https://github.com/pilosus/pathbridge/compare/v0.2.0...v0.3.0

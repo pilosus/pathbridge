@@ -86,9 +86,7 @@ XSD_ERROR_FIXTURES: tuple[ISO20022ErrorFixture, ...] = (
     ISO20022ErrorFixture(
         code="cvc-elt.1",
         location="/Document[1]/Foo[1]",
-        message=(
-            "cvc-elt.1: Cannot find the declaration of element 'Foo'."
-        ),
+        message=("cvc-elt.1: Cannot find the declaration of element 'Foo'."),
         expected_facade_path=None,
         source="https://knowledge.xmldation.com/support/validator/cvc-elt-1",
     ),
@@ -102,9 +100,7 @@ BUSINESS_REJECTION_FIXTURES: tuple[ISO20022ErrorFixture, ...] = (
             "/Document[1]/CstmrCdtTrfInitn[1]/PmtInf[1]/CdtTrfTxInf[2]/"
             "Amt[1]/InstdAmt[1]"
         ),
-        message=(
-            "AM04: Insufficient funds on debtor account."
-        ),
+        message=("AM04: Insufficient funds on debtor account."),
         expected_facade_path=(
             "payment_request/customer_credit_transfer_initiation/"
             "payment_infos[0]/credit_transfers[1]/amount"
@@ -121,9 +117,7 @@ BUSINESS_REJECTION_FIXTURES: tuple[ISO20022ErrorFixture, ...] = (
             "/Envelope[1]/Document[1]/CstmrCdtTrfInitn[1]/PmtInf[2]/"
             "CdtTrfTxInf[3]/CdtrAcct[1]/Id[1]/IBAN[1]"
         ),
-        message=(
-            "AC03: Invalid creditor account number (IBAN)."
-        ),
+        message=("AC03: Invalid creditor account number (IBAN)."),
         expected_facade_path=(
             "payment_request/customer_credit_transfer_initiation/"
             "payment_infos[1]/credit_transfers[2]/creditor/iban"
@@ -137,9 +131,7 @@ BUSINESS_REJECTION_FIXTURES: tuple[ISO20022ErrorFixture, ...] = (
     ISO20022ErrorFixture(
         code="RC01",
         location="/Document[1]/CstmrCdtTrfInitn[1]/PmtInf[3]/Dbtr[1]/Nm[1]",
-        message=(
-            "RC01: Debtor agent identifier is invalid."
-        ),
+        message=("RC01: Debtor agent identifier is invalid."),
         expected_facade_path=(
             "payment_request/customer_credit_transfer_initiation/"
             "payment_infos[2]/debtor_name"
@@ -153,9 +145,7 @@ BUSINESS_REJECTION_FIXTURES: tuple[ISO20022ErrorFixture, ...] = (
     ISO20022ErrorFixture(
         code="FF01",
         location="/Document[1]/AppHdr[1]/Fr[1]/FIId[1]",
-        message=(
-            "FF01: Invalid file format in the submitted payment message."
-        ),
+        message=("FF01: Invalid file format in the submitted payment message."),
         expected_facade_path=None,
         source=(
             "https://www.europeanpaymentscouncil.eu/sites/default/files/kb/file/"
@@ -164,4 +154,3 @@ BUSINESS_REJECTION_FIXTURES: tuple[ISO20022ErrorFixture, ...] = (
         ),
     ),
 )
-
